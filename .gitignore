@@ -1,7 +1,6 @@
 */.ipynb_checkpoints
 .idea/
 input/
-modules/__pycache__/
+__pycache__/
 notebooks/_dev
-notebooks/*.pkl
-*/debug
+output/*/debug
