@@ -2,3 +2,6 @@
 .idea/
 input/
 modules/__pycache__/
+notebooks/_dev
+notebooks/*.pkl
+*/debug
