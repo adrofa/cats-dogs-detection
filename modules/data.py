@@ -1,9 +1,4 @@
-import sys
-import pandas as pd
-import os
-from tqdm import tqdm
 import pickle
-from pathlib import Path
 from matplotlib import pyplot as plt
 import cv2
 import albumentations as A
@@ -47,6 +42,7 @@ def preview(img, bboxes):
         color=(0, 255, 0),
         thickness=2
     ))
+    plt.show()
 
 
 class MyDataset(Dataset):
