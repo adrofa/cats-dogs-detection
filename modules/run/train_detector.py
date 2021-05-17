@@ -71,10 +71,10 @@ def train(model, dataloader, criterion, optimizer, device="cuda", verbose="train
             pred = model.forward(x)
             cls_pred, bboxes_pred = pred[:, 0].unsqueeze(1), pred[:, 1:]
             loss_batch, loss_cls, loss_bboxes = criterion(
-                cls_pred,
-                bboxes_pred,
-                cls.type_as(cls_pred),
-                bboxes.type_as(bboxes_pred),
+                cls_pred=cls_pred,
+                bboxes_pred=bboxes_pred,
+                cls_true=cls.type_as(cls_pred),
+                bboxes_true=bboxes.type_as(bboxes_pred),
             )
             loss_batch.backward()
             optimizer.step()
@@ -146,19 +146,16 @@ def main(cfg):
     seed_everything(cfg["seed"])
 
     dataset_df = pkl_load(cfg["dataset_df_dir"])
-    folds_dct = pkl_load(Path(cfg["output_dir"]) / "cross_validation_split" / cfg["crossval_version"] / "folds_dct.pkl")
+    folds_dct = pkl_load(
+        Path(cfg["output_dir"]) / "cross_validation_split" / cfg["crossval_version"] / "folds_dct.pkl")
 
-    train_df = dataset_df.loc[folds_dct[cfg["fold"]]["train"]]
-    valid_df = dataset_df.loc[folds_dct[cfg["fold"]]["valid"]]
-    if cfg["version"] == "debug":
-        train_df = train_df.head(30)
-        valid_df = valid_df.head(30)
+    train_df = dataset_df.loc[folds_dct[cfg["fold"]]["train"]].copy()
+    valid_df = dataset_df.loc[folds_dct[cfg["fold"]]["valid"]].copy()
+    if cfg["debug"]:
+        train_df = train_df.head(cfg["debug"])
+        valid_df = valid_df.head(cfg["debug"])
     del dataset_df, folds_dct
     gc.collect()
-
-    if cfg["version"] == "debug":
-        train_df = train_df.head(3)
-        valid_df = valid_df.head(3)
 
     # PyTorch Datasets initialization
     augmentation = get_augmentation(cfg["augmentation_version"])
@@ -205,11 +202,11 @@ def main(cfg):
         # train
         progress_train = train(model, dataloader["train"], criterion, optimizer,
                                device=cfg["device"], verbose="train")
-        if cfg["scheduler_version"]:
-            scheduler.step(progress_train["loss"])
         # train loss (like on inference: w/o dropout etc.)
         progress_train_valid = valid(model, dataloader["train_valid"], criterion, pred_ths=cfg["pred_ths"],
                                      device=cfg["device"], verbose="train")
+        if cfg["scheduler_version"]:
+            scheduler.step(progress_train_valid["loss"])
         # validation
         progress_valid = valid(model, dataloader["valid"], criterion, pred_ths=cfg["pred_ths"],
                                device=cfg["device"], verbose="valid")
@@ -218,10 +215,10 @@ def main(cfg):
 
         # Logs: epoch's results
         print(
-            "\t".join([f"Train loss: {progress_train['loss']:.5}",
+            "\t".join([f"Train loss: {progress_train_valid['loss']:.5}",
                        f"Valid loss: {progress_valid['loss']:.5}",
                        f"Best valid loss: {loss_min:.5}"]),
-            "-" * 70,
+            "\n" + "-" * 70,
 
             file=sys.stdout
         )
@@ -252,6 +249,7 @@ def main(cfg):
 if __name__ == "__main__":
     config = {
         "version": "debug",
+        "debug": False,
 
         "dataset_df_dir": "../../output/dataset_df/train/dataset_df.pkl",
         "output_dir": "../../output",
@@ -270,7 +268,7 @@ if __name__ == "__main__":
 
         "criterion_version": "v1",
 
-        "optimizer_version": "adam_v2",
+        "optimizer_version": "adam_v1",
         "optimizer_weights": None,
 
         "scheduler_version": "rop_v1",

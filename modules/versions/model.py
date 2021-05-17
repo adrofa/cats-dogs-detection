@@ -2,6 +2,7 @@ import sys
 
 import timm
 import torch.nn as nn
+import torch
 
 
 def get_model(version, model_weights=None, verbose=True):
@@ -13,25 +14,24 @@ def get_model(version, model_weights=None, verbose=True):
     """
 
     if version == "v1":
-        # Pretrained Xception with fixed Conv layers
+        # Pretrained EfficientNet-B0 with unfreezed classifier only
 
-        if model_weights:
-            raise Exception(f"Model version {version} doesn't support weights preloading!")
-
-        model = timm.create_model('xception', pretrained=True)
-        # for p in model.parameters():
-        #     p.requires_grad = False
-        model.fc = nn.Sequential(
-            nn.Linear(in_features=model.fc.in_features, out_features=1024),
+        model = timm.create_model('efficientnet_b0', pretrained=False if model_weights else True)
+        for p in model.parameters():
+            p.requires_grad = False
+        model.classifier = nn.Sequential(
+            nn.Linear(in_features=model.classifier.in_features, out_features=640),
             nn.Dropout(p=0.25),
             nn.ReLU(inplace=True),
 
-            nn.Linear(in_features=1024, out_features=512),
+            nn.Linear(in_features=640, out_features=320),
             nn.Dropout(p=0.25),
             nn.ReLU(inplace=True),
 
-            nn.Linear(in_features=512, out_features=5)
+            nn.Linear(in_features=320, out_features=5),
         )
+        if model_weights:
+            model.load_state_dict(torch.load(model_weights, map_location="cpu"))
 
     else:
         raise Exception(f"Model version '{version}' is unknown!")

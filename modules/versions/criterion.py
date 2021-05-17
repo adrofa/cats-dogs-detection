@@ -3,6 +3,30 @@ from torch.nn.modules.loss import _Loss
 import torch.nn as nn
 
 
+def get_criterion(version):
+    """Returns criterion function by its version.
+    If prefix is "dct_*" - criterion for detector;
+    if prefix is "clf_*" - criterion for classifier.
+    """
+
+    if version == "v1":
+        criterion = CombinedLoss(
+            # cls_loss=nn.BCELoss(weight=None, size_average=None, reduce=None, reduction='none'),
+            bboxes_loss=nn.SmoothL1Loss(size_average=None, reduce=None,
+                                        reduction='none', beta=1.0),
+            cls_loss=nn.BCEWithLogitsLoss(weight=None, size_average=None,
+                                          reduce=None, reduction='none', pos_weight=None),
+            # bboxes_loss=nn.MSELoss(size_average=None, reduce=None, reduction='none'),
+            bboxes_mult=75,
+            reduction="mean"
+        )
+
+    else:
+        raise Exception(f"Criterion version '{version}' is unknown!")
+
+    return criterion
+
+
 def IoU(bboxes_pred, bboxes):
     xmin_pred, ymin_pred, xmax_pred, ymax_pred = bboxes_pred.T
     xmin_true, ymin_true, xmax_true, ymax_true = bboxes.T
@@ -37,7 +61,7 @@ class CombinedLoss(_Loss):
             others are not implemented yet.
     """
 
-    def __init__(self, cls_loss, bboxes_loss, bboxes_mult=4, reduction="mean"):
+    def __init__(self, cls_loss, bboxes_loss, bboxes_mult, reduction="mean"):
         super(CombinedLoss, self).__init__()
         self.bboxes_mult = bboxes_mult
         self.cls_loss = cls_loss
@@ -60,25 +84,3 @@ class CombinedLoss(_Loss):
             return loss.mean(), cls_loss.mean(), bboxes_loss.mean()
         else:
             raise Exception(f"Reduction '{self.reduction}' is unknown!")
-
-
-def get_criterion(version):
-    """Returns criterion function by its version.
-    If prefix is "dct_*" - criterion for detector;
-    if prefix is "clf_*" - criterion for classifier.
-    """
-
-    if version == "v1":
-        criterion = CombinedLoss(
-            cls_loss=nn.BCEWithLogitsLoss(weight=None, size_average=None, reduce=None,
-                                          reduction='none', pos_weight=None),
-            bboxes_loss=nn.SmoothL1Loss(size_average=None, reduce=None,
-                                        reduction='none', beta=1.0),
-            bboxes_mult=75,
-            reduction="mean"
-        )
-
-    else:
-        raise Exception(f"Criterion version '{version}' is unknown!")
-
-    return criterion
