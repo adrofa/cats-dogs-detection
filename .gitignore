@@ -3,4 +3,4 @@
 input/
 __pycache__/
 notebooks/_dev
-output/*/debug
+debug/

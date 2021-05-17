@@ -1,20 +1,10 @@
-from modules.data import get_dataset_df, pkl_dump
+from modules.data import pkl_dump
 
 from pathlib import Path
 import os
 from sklearn.model_selection import KFold
 import numpy as np
 import json
-
-CONFIG = {
-    "version": "v0",
-
-    "dataset_dir": r"../../input/cats_dogs_dataset/train",
-    "output_dir": r"../../output",
-
-    "n_splits": 10,
-    "seed": 0,
-}
 
 
 def main(cfg):
@@ -35,4 +25,13 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    main(CONFIG)
+    config = {
+        "version": "v0",
+
+        "dataset_dir": r"../../input/cats_dogs_dataset/train",
+        "output_dir": r"../../output",
+
+        "n_splits": 10,
+        "seed": 0,
+    }
+    main(config)
