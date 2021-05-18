@@ -147,7 +147,8 @@ def main(cfg):
 
     # dataset_df
     dataset_df = pkl_load(cfg["dataset_df_path"])
-    dataset_df["img_path"] = Path(cfg["dataset_dir"]) / dataset_df["split"] / (dataset_df.index + ".jpg")
+    dataset_df["img_path"] = (dataset_df["split"] + "/" + (dataset_df.index + ".jpg")).apply(
+        lambda x: Path(cfg["dataset_dir"]) / x)
 
     # cross-validation split
     folds_dct = pkl_load(
