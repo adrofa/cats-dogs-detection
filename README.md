@@ -48,7 +48,7 @@ Results:
 
 ## Version 2
 1. Take model (with the best valid loss) from Version 1;
-2. Unfreeze last 2 layers;
+2. Unfreeze last 2 CONV layers;
 3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
    but bad bboxes preds);
 4. Decrease LR in optimizer
@@ -65,3 +65,36 @@ Results:
 * unfreezing additional layers returned no positive results
 * I suppose, that classifier-head was to heavy and found its local minimum
 ![v2](/output/models/detector/v2/progress.png)
+  
+## Version 3
+1. Take EfficientNet-B0 model pretrained on imagenet;
+2. Replace final FC layer with a custom one (lighter than in version 1);
+3. Train until early stopping.
+* `model_version: v3`
+* `augmentation_version: v1`
+* `criterion_version: v1`
+* `optimizer_version: adam_v1`
+* `scheduler_version: rop_v1`
+* [full config](/output/models/detector/v3/config.json)
+
+Results:
+![v3](/output/models/detector/v3/progress.png)
+
+
+## Version 4
+1. Take model (with the best valid loss) from Version 3;
+2. Unfreeze last 2 CONV layers;
+3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
+   but bad bboxes preds);
+4. Decrease LR in optimizer
+5. Train until early stopping.
+* `model_version: v4`
+* `model_weiights: version_v1`
+* `augmentation_version: v1`
+* `criterion_version: v2`
+* `optimizer_version: adam_v2`
+* `scheduler_version: rop_v2`
+* [full config](/output/models/detector/v4/config.json)
+
+Results:
+![v4](/output/models/detector/v4/progress.png)

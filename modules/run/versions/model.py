@@ -45,7 +45,7 @@ def get_model(version, model_weights=None, verbose=True):
         # unfreeze needed
         children = [c for c in model.children()]
         children = (
-                children[-5:] +
+                children[-5:] +  # last conv layer + residual layers
                 [[c for c in children[-6].children()][-1]]  # last InvertedResidual layer
         )
         for c in children:
@@ -63,6 +63,25 @@ def get_model(version, model_weights=None, verbose=True):
 
         if model_weights:
             model.load_state_dict(torch.load(model_weights, map_location="cpu"))
+
+    elif version == "v4":
+        # get model v3:
+        # load weights obtained on the 1st run (unfreezed only FC layer)
+        # unfreeze 2 last CONV layers
+
+        model = get_model("v3", model_weights=model_weights, verbose=False)
+        # freeze all
+        for p in model.parameters():
+            p.requires_grad = False
+        # unfreeze needed
+        children = [c for c in model.children()]
+        children = (
+                children[-5:] +  # last conv layer + residual layers
+                [[c for c in children[-6].children()][-1]]  # last InvertedResidual layer
+        )
+        for c in children:
+            for p in c.parameters():
+                p.requires_grad = True
 
     else:
         raise Exception(f"Model version '{version}' is unknown!")

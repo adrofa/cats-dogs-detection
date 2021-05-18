@@ -169,6 +169,7 @@ def progress_chart(progress_df, chart_path):
     axs[1, 2].legend()
 
     plt.savefig(chart_path)
+    plt.close()
 
 
 def main(cfg):
