@@ -146,7 +146,7 @@ def main(cfg):
     seed_everything(cfg["seed"])
 
     # dataset_df
-    dataset_df = pkl_load(cfg["dataset_df_dir"])
+    dataset_df = pkl_load(cfg["dataset_df_path"])
     dataset_df["img_path"] = Path(cfg["dataset_dir"]) / dataset_df["split"] / (dataset_df.index + ".jpg")
 
     # cross-validation split
@@ -257,7 +257,7 @@ if __name__ == "__main__":
         "debug": 3,
 
         "dataset_dir": "../../input/cats_dogs_dataset",
-        "dataset_df_dir": "../../output/dataset_df/dataset_df.pkl",
+        "dataset_df_path": "../../output/dataset_df/dataset_df.pkl",
         "output_dir": "../../output",
 
         "crossval_version": "v1",
