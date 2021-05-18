@@ -35,7 +35,7 @@ but **EfficientNet-B0** showed better results, hence I continue with this backbo
 ## Transfer Learning
 Experiments performed with pretrained models are described below. 
 
-### Version 1
+### Version 1 | IoU: 0.427
 1. Take EfficientNet-B0 model pretrained on imagenet;
 2. Replace final FC layer with a custom one;
 3. Train until early stopping.
@@ -49,7 +49,7 @@ Experiments performed with pretrained models are described below.
 Results:
 ![v1](/output/models/detector/v1/progress.png)
 
-### Version 2
+### Version 2 | IoU: 0.425
 1. Take model (with the best valid loss) from Version 1;
 2. Unfreeze last 2 CONV layers;
 3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
@@ -69,7 +69,7 @@ Results:
 * I suppose, that classifier-head was to heavy and found its local minimum
 ![v2](/output/models/detector/v2/progress.png)
   
-### Version 3
+### Version 3 | IoU: 0.395
 1. Take EfficientNet-B0 model pretrained on imagenet;
 2. Replace final FC layer with a custom one (lighter than in version 1);
 3. Train until early stopping.
@@ -84,7 +84,7 @@ Results:
 ![v3](/output/models/detector/v3/progress.png)
 
 
-### Version 4
+### Version 4 | IoU: 0.401
 1. Take model (with the best valid loss) from Version 3;
 2. Unfreeze last 2 CONV layers;
 3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
@@ -102,7 +102,7 @@ Results:
 Results:
 ![v4](/output/models/detector/v4/progress.png)
 
-### Version 5
+### Version 5 | IoU: 0.714
 I performed several local tests on Version 4:
 * with different LRs;
 * w/o separate FC layer pretraining;
