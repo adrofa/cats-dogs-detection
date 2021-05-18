@@ -139,7 +139,7 @@ def main(cfg):
     try:
         os.makedirs(results_dir, exist_ok=True if cfg["version"] == "debug" else False)
     except:
-        raise Exception(f"cross_validation_split {cfg['version']} exists!")
+        raise Exception(f"{cfg['version']} exists!")
     with open(results_dir / "config.json", 'w') as f:
         json.dump(cfg, f, indent=4)
 
