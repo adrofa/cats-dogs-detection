@@ -1,0 +1,4 @@
+{
+    "dataset_dir": "../../input/cats_dogs_dataset",
+    "output_dir": "../../output"
+}

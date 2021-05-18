@@ -145,12 +145,17 @@ def main(cfg):
 
     seed_everything(cfg["seed"])
 
+    # dataset_df
     dataset_df = pkl_load(cfg["dataset_df_dir"])
+    dataset_df["img_path"] = Path(cfg["dataset_dir"]) / dataset_df["split"] / (dataset_df.index + ".jpg")
+
+    # cross-validation split
     folds_dct = pkl_load(
         Path(cfg["output_dir"]) / "cross_validation_split" / cfg["crossval_version"] / "folds_dct.pkl")
-
     train_df = dataset_df.loc[folds_dct[cfg["fold"]]["train"]].copy()
     valid_df = dataset_df.loc[folds_dct[cfg["fold"]]["valid"]].copy()
+
+    # DEBUG: shorten number of images
     if cfg["debug"]:
         train_df = train_df.head(cfg["debug"])
         valid_df = valid_df.head(cfg["debug"])
@@ -249,12 +254,13 @@ def main(cfg):
 if __name__ == "__main__":
     config = {
         "version": "debug",
-        "debug": False,
+        "debug": 3,
 
-        "dataset_df_dir": "../../output/dataset_df/train/dataset_df.pkl",
+        "dataset_dir": "../../input/cats_dogs_dataset",
+        "dataset_df_dir": "../../output/dataset_df/dataset_df.pkl",
         "output_dir": "../../output",
 
-        "crossval_version": "v0",
+        "crossval_version": "v1",
         "fold": 0,
 
         "augmentation_version": "v1",

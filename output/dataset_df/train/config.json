@@ -1,5 +1,0 @@
-{
-    "version": "train",
-    "dataset_dir": "../../input/cats_dogs_dataset/train",
-    "output_dir": "../../output"
-}

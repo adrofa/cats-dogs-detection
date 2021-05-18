@@ -10,13 +10,12 @@ import json
 
 
 def get_dataset_df(dataset_dir, verbose=False):
-    """Collect pandas.DataFrame with *.jpg/*.txt files' names as index
-    (<file_name.jpg> / <file_name.txt>) and the following columns:
-        img_path - path to the *.jpg file;
+    """Collect pandas.DataFrame with image_id as index (image_id.jpg)
+    and the following columns:
+        height, width - image's height and width.
         cls - image class (0 - cat; 1 - dog);
         xmin, ymin, xmax, ymax - bounding box' coordinates;
-        xmin_n, ymin_n, xmax_n, ymax_n - normalized bounding box' coordinates;
-        height, width - image's height and width.
+        bboxes - list of normalized bounding box' coordinates.
 
     Args:
         dataset_dir (str): path to directory with images and annotation
@@ -26,7 +25,7 @@ def get_dataset_df(dataset_dir, verbose=False):
         dataset_df: pandas.DataFrame.
     """
 
-    inf_cols = ["id", "img_path", "height", "width"]
+    inf_cols = ["id", "height", "width"]
     ann_cols = ["cls", "xmin", "ymin", "xmax", "ymax"]
     dataset_df = pd.DataFrame(columns=inf_cols + ann_cols)
 
@@ -47,7 +46,6 @@ def get_dataset_df(dataset_dir, verbose=False):
             img_dct = {k: v for k, v in zip(ann_cols, annotation)}
             img_dct.update({
                 "id": img_id,
-                "img_path": img_path,
                 "height": height,
                 "width": width,
             })
@@ -67,13 +65,14 @@ def get_dataset_df(dataset_dir, verbose=False):
 
 
 def main(cfg):
-    results_dir = Path(cfg["output_dir"]) / "dataset_df" / cfg["version"]
-    try:
-        os.makedirs(results_dir, exist_ok=True if cfg["version"] == "debug" else False)
-    except:
-        raise Exception(f"cross_validation_split {cfg['version']} exists!")
+    results_dir = Path(cfg["output_dir"]) / "dataset_df"
+    os.makedirs(results_dir, exist_ok=True)
 
-    dataset_df = get_dataset_df(cfg["dataset_dir"], True)
+    dataset_df = pd.DataFrame()
+    for split in ["train", "valid"]:
+        df = get_dataset_df(Path(cfg["dataset_dir"]) / split, verbose=True)
+        df["split"] = split
+        dataset_df = dataset_df.append(df, ignore_index=False)
 
     pkl_dump(dataset_df, results_dir / "dataset_df.pkl")
     with open(results_dir / "config.json", 'w') as f:
@@ -82,9 +81,7 @@ def main(cfg):
 
 if __name__ == "__main__":
     config = {
-        "version": "train",
-
-        "dataset_dir": r"../../input/cats_dogs_dataset/train",
+        "dataset_dir": r"../../input/cats_dogs_dataset",
         "output_dir": r"../../output",
     }
     main(config)

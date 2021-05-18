@@ -1,9 +1,8 @@
-from modules.data import pkl_dump
+from modules.data import pkl_dump, pkl_load
 
 from pathlib import Path
 import os
 from sklearn.model_selection import KFold
-import numpy as np
 import json
 
 
@@ -14,8 +13,10 @@ def main(cfg):
     except:
         raise Exception(f"cross_validation_split {cfg['version']} exists!")
 
-    img_ids = np.array([f.split(".")[0] for f in os.listdir(cfg["dataset_dir"]) if ".jpg" in f])
+    dataset_df = pkl_load(Path(cfg["dataset_df_dir"]) / "dataset_df.pkl")
+    img_ids = dataset_df[dataset_df["split"] == "train"].index.values
     kf = KFold(n_splits=cfg["n_splits"], random_state=cfg["seed"], shuffle=True)
+
     folds_dct = {i: {"train": img_ids[train_idx], "valid": img_ids[valid_idx]}
                  for i, (train_idx, valid_idx) in enumerate(kf.split(img_ids))}
 
@@ -26,9 +27,9 @@ def main(cfg):
 
 if __name__ == "__main__":
     config = {
-        "version": "v0",
+        "version": "v1",
 
-        "dataset_dir": r"../../input/cats_dogs_dataset/train",
+        "dataset_df_dir": r"../../output/dataset_df",
         "output_dir": r"../../output",
 
         "n_splits": 10,

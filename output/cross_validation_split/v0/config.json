@@ -1,7 +1,0 @@
-{
-    "version": "v0",
-    "dataset_dir": "../../input/cats_dogs_dataset/train",
-    "output_dir": "../../output",
-    "n_splits": 10,
-    "seed": 0
-}

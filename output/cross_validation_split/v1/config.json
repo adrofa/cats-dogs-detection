@@ -1,0 +1,7 @@
+{
+    "version": "v1",
+    "dataset_df_dir": "../../output/dataset_df",
+    "output_dir": "../../output",
+    "n_splits": 10,
+    "seed": 0
+}
