@@ -17,6 +17,7 @@ import gc
 from torch.utils.data import DataLoader
 import pandas as pd
 import json
+from matplotlib import pyplot as plt
 
 
 def seed_everything(seed):
@@ -134,6 +135,42 @@ def valid(model, dataloader, criterion, pred_ths=0, device="cuda", verbose="vali
     return progress_dct
 
 
+def progress_chart(progress_df, chart_path):
+    fig, axs = plt.subplots(2, 3, figsize=(16, 8))
+
+    # loss
+    axs[0, 0].set_title('Loss')
+    axs[0, 0].plot(progress_df["train_loss"], label="train")
+    axs[0, 0].plot(progress_df["valid_loss"], label="valid")
+    axs[0, 0].legend()
+
+    # Class loss
+    axs[0, 1].set_title('Class Loss')
+    axs[0, 1].plot(progress_df["train_cls"], label="train")
+    axs[0, 1].plot(progress_df["valid_cls"], label="valid")
+    axs[0, 1].legend()
+
+    # BBoxes loss
+    axs[0, 2].set_title('BBoxes Loss')
+    axs[0, 2].plot(progress_df["train_bbx"], label="train")
+    axs[0, 2].plot(progress_df["valid_bbx"], label="valid")
+    axs[0, 2].legend()
+
+    # Accuracy
+    axs[1, 1].set_title('Accuracy')
+    axs[1, 1].plot(progress_df["train_acc"], label="train")
+    axs[1, 1].plot(progress_df["valid_acc"], label="valid")
+    axs[1, 1].legend()
+
+    # IoU
+    axs[1, 2].set_title('IoU')
+    axs[1, 2].plot(progress_df["train_iou"], label="train")
+    axs[1, 2].plot(progress_df["valid_iou"], label="valid")
+    axs[1, 2].legend()
+
+    plt.savefig(chart_path)
+
+
 def main(cfg):
     results_dir = Path(cfg["output_dir"]) / "models" / "detector" / cfg["version"]
     try:
@@ -235,6 +272,7 @@ def main(cfg):
         progress_epoch.update({"valid_" + i: progress_valid[i] for i in progress_valid})
         progress.append(progress_epoch)
         pkl_dump(pd.DataFrame(progress), results_dir / "progress.pkl")
+        progress_chart(pd.DataFrame(progress), results_dir / "progress.png")
 
         # saving model's weights
         if progress_valid["loss"] <= loss_min:
