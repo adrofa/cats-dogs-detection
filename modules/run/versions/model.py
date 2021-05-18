@@ -46,7 +46,7 @@ def get_model(version, model_weights=None, verbose=True):
         children = [c for c in model.children()]
         children = (
                 children[-5:] +  # last conv layer + residual layers
-                [[c for c in children[-6].children()][-1]]  # last InvertedResidual layer
+                [c for c in children[-6].children()][-1:]  # last InvertedResidual layer
         )
         for c in children:
             for p in c.parameters():
@@ -77,7 +77,25 @@ def get_model(version, model_weights=None, verbose=True):
         children = [c for c in model.children()]
         children = (
                 children[-5:] +  # last conv layer + residual layers
-                [[c for c in children[-6].children()][-1]]  # last InvertedResidual layer
+                [c for c in children[-6].children()][-1:]  # last InvertedResidual layer
+        )
+        for c in children:
+            for p in c.parameters():
+                p.requires_grad = True
+
+    elif version == "v5":
+        # get model v3:
+        # unfreeze 3 last CONV layers
+
+        model = get_model("v3", model_weights=model_weights, verbose=False)
+        # freeze all
+        for p in model.parameters():
+            p.requires_grad = False
+        # unfreeze needed
+        children = [c for c in model.children()]
+        children = (
+                children[-5:] +  # last conv layer + residual layers
+                [c for c in children[-6].children()][-2:]  # 2 last InvertedResidual layers
         )
         for c in children:
             for p in c.parameters():

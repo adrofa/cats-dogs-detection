@@ -32,7 +32,10 @@ but **EfficientNet-B0** showed better results, hence I continue with this backbo
 
 *For more parameters versions details consider `run/versions/<parameter>_version`.* 
 
-## Version 1
+## Transfer Learning
+Experiments performed with pretrained models are described below. 
+
+### Version 1
 1. Take EfficientNet-B0 model pretrained on imagenet;
 2. Replace final FC layer with a custom one;
 3. Train until early stopping.
@@ -46,7 +49,7 @@ but **EfficientNet-B0** showed better results, hence I continue with this backbo
 Results:
 ![v1](/output/models/detector/v1/progress.png)
 
-## Version 2
+### Version 2
 1. Take model (with the best valid loss) from Version 1;
 2. Unfreeze last 2 CONV layers;
 3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
@@ -66,7 +69,7 @@ Results:
 * I suppose, that classifier-head was to heavy and found its local minimum
 ![v2](/output/models/detector/v2/progress.png)
   
-## Version 3
+### Version 3
 1. Take EfficientNet-B0 model pretrained on imagenet;
 2. Replace final FC layer with a custom one (lighter than in version 1);
 3. Train until early stopping.
@@ -81,7 +84,7 @@ Results:
 ![v3](/output/models/detector/v3/progress.png)
 
 
-## Version 4
+### Version 4
 1. Take model (with the best valid loss) from Version 3;
 2. Unfreeze last 2 CONV layers;
 3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
@@ -98,3 +101,37 @@ Results:
 
 Results:
 ![v4](/output/models/detector/v4/progress.png)
+
+### Version 5
+I performed several local tests on Version 4:
+* with different LRs;
+* w/o separate FC layer pretraining;
+* higher bounding boxes loss weight.
+
+Tests showed, that model converges much faster with higher LR and
+a separate FC layer pretraining is not needed.
+
+Also, I looked on predicted bounding boxes and images and noticed that
+there are 2 groups of images:
+* "horizontal" (with > height)
+* "vertical" (height > width).
+
+Previously I was resizing images to fixed square (e.g. 256x256). Hence a net need to learn features
+from 2 different. To fix this issues I replaced basic resizing to resizing by the longest side +
+padding.
+
+1. Take EfficientNet-B0 model pretrained on imagenet;
+2. Unfreeze last 2 CONV layers;
+3. Increase bbox weights in Loss function to 1_000;
+4. Increase LR to 0.01
+5. Train until early stopping.
+* `model_version: v4`
+* `model_weiights: None`
+* `augmentation_version: v2`
+* `criterion_version: v3`
+* `optimizer_version: adam_v3`
+* `scheduler_version: rop_v2`
+* [full config](/output/models/detector/v5/config.json)
+
+Results:
+![v5](/output/models/detector/v5/progress.png)

@@ -294,7 +294,7 @@ def main(cfg):
 if __name__ == "__main__":
     config = {
         "version": "debug",
-        "debug": 3,
+        "debug": False,
 
         "dataset_dir": "../../input/cats_dogs_dataset",
         "dataset_df_path": "../../output/dataset_df/dataset_df.pkl",
@@ -303,18 +303,18 @@ if __name__ == "__main__":
         "crossval_version": "v1",
         "fold": 0,
 
-        "augmentation_version": "v1",
+        "augmentation_version": "v2",
 
         "batch_size": 32,
         "n_jobs": 2,
         "device": "cuda",
 
-        "model_version": "v1",
-        "model_weights": None,
+        "model_version": "v5",
+        "model_weights": "/media/adrofa/Data/YandexDisk/Documents/Career/DS/test_tasks/2021_05_13_neurus/output/models/detector/v5/model.pt",
 
-        "criterion_version": "v1",
+        "criterion_version": "v3",
 
-        "optimizer_version": "adam_v1",
+        "optimizer_version": "adam_v3",
         "optimizer_weights": None,
 
         "scheduler_version": "rop_v1",
@@ -322,7 +322,7 @@ if __name__ == "__main__":
         "pred_ths": 0,
 
         "epoch_num": 1000,
-        "early_stopping": 1000,
+        "early_stopping": 10,
 
         "seed": 0
     }
