@@ -1,9 +1,9 @@
 from modules.data import pkl_load, MyDataset, pkl_dump
-from modules.versions.augmentation import get_augmentation
-from modules.versions.model import get_model
-from modules.versions.criterion import get_criterion
-from modules.versions.optimizer import get_optimizer
-from modules.versions.scheduler import get_scheduler
+from modules.run.versions.augmentation import get_augmentation
+from modules.run.versions.model import get_model
+from modules.run.versions.criterion import get_criterion
+from modules.run.versions.optimizer import get_optimizer
+from modules.run.versions.scheduler import get_scheduler
 
 
 import random
