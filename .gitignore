@@ -4,3 +4,5 @@ input/
 __pycache__/
 notebooks/_dev
 debug/
+model.pt
+optimizer.pt
