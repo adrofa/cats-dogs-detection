@@ -6,7 +6,9 @@ import albumentations as A
 
 def get_augmentation(version):
     if version == "v1":
-        size = 448  # YOLOv2 size
+        # YOLOv2 size
+        size = 448
+        # ImageNet Normalization
         normalization = A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), p=1)
 
         augmentation = {
@@ -30,6 +32,41 @@ def get_augmentation(version):
 
             "valid": A.Compose([
                 A.Resize(size, size, interpolation=1, always_apply=False, p=1),
+                normalization
+            ]),
+        }
+
+    elif version == "v2":
+        # YOLOv2 size
+        size = 448
+        # ImageNet Normalization
+        normalization = A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225), p=1)
+
+        augmentation = {
+            "train": A.Compose([
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.5),
+                A.RandomRotate90(p=0.5),
+
+                A.RandomBrightnessContrast(brightness_limit=0.3, contrast_limit=0.3, p=0.25),
+                A.Blur(blur_limit=4, always_apply=False, p=0.25),
+                A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2,
+                              always_apply=False, p=0.25),
+
+                A.LongestMaxSize(max_size=size, interpolation=1, always_apply=False, p=1),
+                A.PadIfNeeded(min_height=size, min_width=size,
+                              pad_height_divisor=None, pad_width_divisor=None,
+                              border_mode=1, value=None, mask_value=None,
+                              always_apply=False, p=1),
+                normalization
+            ]),
+
+            "valid": A.Compose([
+                A.LongestMaxSize(max_size=size, interpolation=1, always_apply=False, p=1),
+                A.PadIfNeeded(min_height=size, min_width=size,
+                              pad_height_divisor=None, pad_width_divisor=None,
+                              border_mode=1, value=None, mask_value=None,
+                              always_apply=False, p=1),
                 normalization
             ]),
         }
