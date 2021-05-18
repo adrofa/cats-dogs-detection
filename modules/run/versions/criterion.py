@@ -21,6 +21,16 @@ def get_criterion(version):
             reduction="mean"
         )
 
+    elif version == "v2":
+        criterion = CombinedLoss(
+            bboxes_loss=nn.SmoothL1Loss(size_average=None, reduce=None,
+                                        reduction='none', beta=1.0),
+            cls_loss=nn.BCEWithLogitsLoss(weight=None, size_average=None,
+                                          reduce=None, reduction='none', pos_weight=None),
+            bboxes_mult=100,
+            reduction="mean"
+        )
+
     else:
         raise Exception(f"Criterion version '{version}' is unknown!")
 

@@ -9,7 +9,7 @@ def get_optimizer(version, model_parameters, optimizer_weights=None):
             optimizer.load_state_dict(torch.load(optimizer_weights))
 
     elif version == "adam_v2":
-        optimizer = torch.optim.Adam(params=model_parameters, lr=3e-5)
+        optimizer = torch.optim.Adam(params=model_parameters, lr=3e-6)
         if optimizer_weights:
             optimizer.load_state_dict(torch.load(optimizer_weights))
 
