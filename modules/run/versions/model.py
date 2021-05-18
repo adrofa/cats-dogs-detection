@@ -52,6 +52,18 @@ def get_model(version, model_weights=None, verbose=True):
             for p in c.parameters():
                 p.requires_grad = True
 
+    elif version == "v3":
+        # Pretrained EfficientNet-B0 with unfreezed classifier only
+        # similar to v1, but with light head
+
+        model = timm.create_model('efficientnet_b0', pretrained=False if model_weights else True)
+        for p in model.parameters():
+            p.requires_grad = False
+        model.classifier = nn.Linear(in_features=model.classifier.in_features, out_features=5)
+
+        if model_weights:
+            model.load_state_dict(torch.load(model_weights, map_location="cpu"))
+
     else:
         raise Exception(f"Model version '{version}' is unknown!")
 

@@ -30,6 +30,8 @@ Also I made couple experiments with the pretrained **Xception**,
 but **EfficientNet-B0** showed better results, hence I continue with this backbone.
 *Both pretrained models are from [`timm`](https://pypi.org/project/timm/) package.*
 
+*For more parameters versions details consider `run/versions/<parameter>_version`.* 
+
 ## Version 1
 1. Take EfficientNet-B0 model pretrained on imagenet;
 2. Replace final FC layer with a custom one;
@@ -44,4 +46,22 @@ but **EfficientNet-B0** showed better results, hence I continue with this backbo
 Results:
 ![v1](/output/models/detector/v1/progress.png)
 
-*For more parameters versions details consider `run/versions/<parameter>_version`.* 
+## Version 2
+1. Take model (with the best valid loss) from Version 1;
+2. Unfreeze last 2 layers;
+3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
+   but bad bboxes preds);
+4. Decrease LR in optimizer
+5. Train until early stopping.
+* `model_version: v2`
+* `model_weiights: version_v1`
+* `augmentation_version: v1`
+* `criterion_version: v2`
+* `optimizer_version: adam_v2`
+* `scheduler_version: rop_v2`
+* [full config](/output/models/detector/v2/config.json)
+
+Results:
+* unfreezing additional layers returned no positive results
+* I suppose, that classifier-head was to heavy and found its local minimum
+![v2](/output/models/detector/v2/progress.png)
