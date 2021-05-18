@@ -89,7 +89,7 @@ Results:
 4. Decrease LR in optimizer
 5. Train until early stopping.
 * `model_version: v4`
-* `model_weiights: version_v1`
+* `model_weiights: version_v3`
 * `augmentation_version: v1`
 * `criterion_version: v2`
 * `optimizer_version: adam_v2`
