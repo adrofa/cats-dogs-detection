@@ -23,6 +23,11 @@ def get_optimizer(version, model_parameters, optimizer_weights=None):
         if optimizer_weights:
             optimizer.load_state_dict(torch.load(optimizer_weights))
 
+    elif version == "adam_v5":
+        optimizer = torch.optim.Adam(params=model_parameters, lr=0.001)
+        if optimizer_weights:
+            optimizer.load_state_dict(torch.load(optimizer_weights))
+
     else:
         raise Exception(f"Optimizer version '{version}' is unknown!")
 

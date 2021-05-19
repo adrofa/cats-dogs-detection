@@ -167,19 +167,39 @@ Here I wil:
 * [full config](/output/models/detector/v7/config.json)
 
 Results:
-![v7](/output/models/detector/v4/progress.png)
+![v7](/output/models/detector/v7/progress.png)
 
-### Version 8 | IoU: 
+### Version 8 | IoU: 0.838
 In Version 7 IoU dropped to ~0.6 (from ~0.8) after 1st epoch.
 In this version I will try to fix it with LR reduction.
+
+(This run was manually stopped after 45th epoch)
 
 * `model_version: v6`
 * `model_weiights: version_v6`
 * `augmentation_version: v2`
 * `criterion_version: v3`
-* `optimizer_version: adam_v3`
+* `optimizer_version: adam_v4`
 * `scheduler_version: rop_v1`
 * [full config](/output/models/detector/v7/config.json)
 
 Results:
 ![v8](/output/models/detector/v8/progress.png)
+
+### Version 9 | 
+Vrsion 8 was converging well, but slowly. I beleive Version 7 failed (with too high LR)
+because ADAM-optimizer was started from scrath.
+
+In Version 9 I will use "pretrained" optimizer from Version 8 and increase LR.
+
+* `model_version: v6`
+* `model_weiights: version_v8`
+* `augmentation_version: v2`
+* `criterion_version: v3`
+* `optimizer_version: adam_v5`
+* `optimizer_weights: version_v8`
+* `scheduler_version: rop_v1`
+* [full config](/output/models/detector/v7/config.json)
+
+Results:
+![v9](/output/models/detector/v9/progress.png)

@@ -62,13 +62,14 @@ class MyDataset(Dataset):
         transformed = self.transform(image=img, bboxes=[row["bboxes"]], class_labels=[row["cls"]])
         return transformed["image"], transformed["bboxes"], transformed["class_labels"]
 
-    def get_img_bboxes(self, idx, transformed=True):
+    def get_img_bboxes(self, idx, transformed=True, normalized=False):
         """Get an image and its bounding box from the datasets.
 
         Args:
             idx (int): image index.
             transformed (bool): if True - get image and un-normalized bboxes as they will be passed to a network;
                 if False - get image and bboxes without any transformations (from raw data).
+            normalized (bool): if True - returns bboxes divided on dimension side.
 
         Returns:
             img (numpy.array): RGB image of shape HWC.
@@ -77,11 +78,15 @@ class MyDataset(Dataset):
         if transformed:
             img, bboxes, _ = self.__getitem__(idx)
             img, bboxes = img.numpy().transpose(1, 2, 0), bboxes[0]
-            bboxes = [int(bboxes[i] * img.shape[(i + 1) % 2])
-                      for i, _ in enumerate(bboxes)]
+            if not normalized:
+                bboxes = [int(bboxes[i] * img.shape[(i + 1) % 2])
+                          for i, _ in enumerate(bboxes)]
         else:
             row = self.df.iloc[idx]
             img = cv2.cvtColor(cv2.imread(str(row["img_path"])), cv2.COLOR_BGR2RGB)
-            bboxes = [row["xmin"], row["ymin"], row["xmax"], row["ymax"]]
+            if normalized:
+                bboxes = row["bboxes"]
+            else:
+                bboxes = [row["xmin"], row["ymin"], row["xmax"], row["ymax"]]
 
         return img, bboxes
