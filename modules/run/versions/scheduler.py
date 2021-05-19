@@ -24,6 +24,14 @@ def get_scheduler(version, optimizer):
             threshold_mode='rel', cooldown=0, min_lr=0, eps=1e-08, verbose=True
         )
 
+    elif version == "ccl_v1":
+        scheduler = torch.optim.lr_scheduler.CyclicLR(
+            optimizer, 0.00001, 0.01,
+            step_size_up=5, step_size_down=None, mode='triangular',
+            gamma=1.0, scale_fn=None, scale_mode='cycle', cycle_momentum=False,
+            base_momentum=0.8, max_momentum=0.9, last_epoch=-1, verbose=True
+        )
+
     else:
         raise Exception(f"Scheduler version '{version}' is unknown!")
 

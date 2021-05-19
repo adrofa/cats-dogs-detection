@@ -61,7 +61,7 @@ Results:
 * `augmentation_version: v1`
 * `criterion_version: v2`
 * `optimizer_version: adam_v2`
-* `scheduler_version: rop_v2`
+* `scheduler_version: rop_v1`
 * [full config](/output/models/detector/v2/config.json)
 
 Results:
@@ -96,7 +96,7 @@ Results:
 * `augmentation_version: v1`
 * `criterion_version: v2`
 * `optimizer_version: adam_v2`
-* `scheduler_version: rop_v2`
+* `scheduler_version: rop_v1`
 * [full config](/output/models/detector/v4/config.json)
 
 Results:
@@ -130,8 +130,56 @@ padding.
 * `augmentation_version: v2`
 * `criterion_version: v3`
 * `optimizer_version: adam_v3`
-* `scheduler_version: rop_v2`
+* `scheduler_version: rop_v1`
 * [full config](/output/models/detector/v5/config.json)
 
 Results:
 ![v5](/output/models/detector/v5/progress.png)
+
+
+### Version 6 | IoU: 0.811
+Here I wil:
+1. take Version 5 model;
+2. unfreeze 1 more layer (total: last 3 Conv layers).
+
+* `model_version: v5`
+* `model_weiights: version_v5`
+* `augmentation_version: v2`
+* `criterion_version: v3`
+* `optimizer_version: adam_v3`
+* `scheduler_version: rop_v1`
+* [full config](/output/models/detector/v6/config.json)
+
+Results:
+![v6](/output/models/detector/v6/progress.png)
+
+### Version 7 | IoU: 0.796
+Here I wil:
+1. take Version 6 model;
+2. unfreeze 1 more layer (total: last 4 Conv layers).
+
+* `model_version: v6`
+* `model_weiights: version_v6`
+* `augmentation_version: v2`
+* `criterion_version: v3`
+* `optimizer_version: adam_v3`
+* `scheduler_version: rop_v1`
+* [full config](/output/models/detector/v7/config.json)
+
+Results:
+![v7](/output/models/detector/v4/progress.png)
+
+### Version 8 | IoU: 
+In Version 7 IoU dropped to ~0.6 (from ~0.8) after 1st epoch.
+In this version I will try to fix it with LR reduction.
+
+* `model_version: v6`
+* `model_weiights: version_v6`
+* `augmentation_version: v2`
+* `criterion_version: v3`
+* `optimizer_version: adam_v3`
+* `scheduler_version: rop_v1`
+* [full config](/output/models/detector/v7/config.json)
+
+Results:
+![v8](/output/models/detector/v8/progress.png)

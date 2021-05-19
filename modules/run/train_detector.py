@@ -250,7 +250,10 @@ def main(cfg):
         progress_train_valid = valid(model, dataloader["train_valid"], criterion, pred_ths=cfg["pred_ths"],
                                      device=cfg["device"], verbose="train")
         if cfg["scheduler_version"]:
-            scheduler.step(progress_train_valid["loss"])
+            if cfg["scheduler_version"].split("_")[0] == "rop":
+                scheduler.step(progress_train_valid["loss"])
+            else:
+                scheduler.step()
         # validation
         progress_valid = valid(model, dataloader["valid"], criterion, pred_ths=cfg["pred_ths"],
                                device=cfg["device"], verbose="valid")
@@ -317,7 +320,7 @@ if __name__ == "__main__":
         "optimizer_version": "adam_v3",
         "optimizer_weights": None,
 
-        "scheduler_version": "rop_v1",
+        "scheduler_version": "ccl_v1",
 
         "pred_ths": 0,
 
