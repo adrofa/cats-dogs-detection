@@ -87,7 +87,7 @@ if __name__ == "__main__":
         "output_dir": "../../output",
 
         "model_version": "v3",
-        "model_weights": "/media/adrofa/Data/YandexDisk/Documents/Career/DS/test_tasks/2021_05_13_neurus/output/models/detector/v3/model.pt",
+        "model_weights": "/media/adrofa/Data/YandexDisk/Documents/Career/DS/test_tasks/2021_05_13_neurus/output/models/detector/v9/model.pt",
 
         "crossval_version": "v1",
         "fold": 0,

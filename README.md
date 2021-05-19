@@ -57,7 +57,7 @@ Results:
 4. Decrease LR in optimizer
 5. Train until early stopping.
 * `model_version: v2`
-* `model_weiights: version_v1`
+* `model_weights: version_v1`
 * `augmentation_version: v1`
 * `criterion_version: v2`
 * `optimizer_version: adam_v2`
@@ -92,7 +92,7 @@ Results:
 4. Decrease LR in optimizer
 5. Train until early stopping.
 * `model_version: v4`
-* `model_weiights: version_v3`
+* `model_weights: version_v3`
 * `augmentation_version: v1`
 * `criterion_version: v2`
 * `optimizer_version: adam_v2`
@@ -126,7 +126,7 @@ padding.
 4. Increase LR to 0.01
 5. Train until early stopping.
 * `model_version: v4`
-* `model_weiights: None`
+* `model_weights: None`
 * `augmentation_version: v2`
 * `criterion_version: v3`
 * `optimizer_version: adam_v3`
@@ -143,7 +143,7 @@ Here I wil:
 2. unfreeze 1 more layer (total: last 3 Conv layers).
 
 * `model_version: v5`
-* `model_weiights: version_v5`
+* `model_weights: version_v5`
 * `augmentation_version: v2`
 * `criterion_version: v3`
 * `optimizer_version: adam_v3`
@@ -193,7 +193,7 @@ because ADAM-optimizer was started from scratch.
 In Version 9 I will use "pretrained" optimizer from Version 8 and increase LR.
 
 * `model_version: v6`
-* `model_weiights: version_v8`
+* `model_weights: version_v8`
 * `augmentation_version: v2`
 * `criterion_version: v3`
 * `optimizer_version: adam_v5`
@@ -204,18 +204,38 @@ In Version 9 I will use "pretrained" optimizer from Version 8 and increase LR.
 Results:
 ![v9](/output/models/detector/v9/progress.png)
 
-### Version 10 | 
+### Version 10 | 0.85
 Here I wil:
 1. take Version 9 model;
 2. unfreeze next Conv layer (total: last 5 Conv layers);
 3. LR: 0.0001
 
-
 * `model_version: v6`
-* `model_weiights: version_v9`
+* `model_weights: version_v9`
 * `augmentation_version: v2`
 * `criterion_version: v3`
 * `optimizer_version: adam_v4`
 * `optimizer_weights: None`
 * `scheduler_version: rop_v1`
-* [full config](/output/models/detector/v7/config.json)
+* [full config](/output/models/detector/v10/config.json)
+
+Results:
+![v10](/output/models/detector/v10/progress.png)
+
+### Version 11 | 
+Here I wil:
+1. try to fine-tune the model from Version 10 with a higher LR
+2. return old augmentation (w/o padding, just resizing),
+   otherwise I need to produce additional code for inference. 
+
+* `model_version: v6`
+* `model_weights: version_v10`
+* `augmentation_version: v1`
+* `criterion_version: v3`
+* `optimizer_version: adam_v3`
+* `optimizer_weights: version_v10`
+* `scheduler_version: rop_v1`
+* [full config](/output/models/detector/v11/config.json)
+
+Results:
+![v11](/output/models/detector/v11/progress.png)

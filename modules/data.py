@@ -28,18 +28,24 @@ def pkl_load(file):
     return obj
 
 
-def preview(img, bboxes):
+def preview(img, bboxes, color="green"):
     """Show an image with a bounding box from a dataset row.
 
     Args:
         img (numpy.array): RGB image of shape HWC.
         bboxes (list): bounding box coordinates [xmin, ymin, xmax, ymax].
     """
+    colors = {
+        "green": (0, 255, 0),
+        "red": (255, 0, 0),
+        "blue": (0, 0, 255),
+    }
+
     plt.imshow(cv2.rectangle(
         img=img,
         pt1=(bboxes[0], bboxes[1]),
         pt2=(bboxes[2], bboxes[3]),
-        color=(0, 255, 0),
+        color=colors[color],
         thickness=2
     ))
     plt.show()
