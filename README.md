@@ -186,9 +186,9 @@ In this version I will try to fix it with LR reduction.
 Results:
 ![v8](/output/models/detector/v8/progress.png)
 
-### Version 9 | 
-Vrsion 8 was converging well, but slowly. I beleive Version 7 failed (with too high LR)
-because ADAM-optimizer was started from scrath.
+### Version 9 | 0.847
+Version 8 was converging well, but slowly. I believe that Version 7 (with too high LR) failed
+because ADAM-optimizer was started from scratch.
 
 In Version 9 I will use "pretrained" optimizer from Version 8 and increase LR.
 
@@ -203,3 +203,19 @@ In Version 9 I will use "pretrained" optimizer from Version 8 and increase LR.
 
 Results:
 ![v9](/output/models/detector/v9/progress.png)
+
+### Version 10 | 
+Here I wil:
+1. take Version 9 model;
+2. unfreeze next Conv layer (total: last 5 Conv layers);
+3. LR: 0.0001
+
+
+* `model_version: v6`
+* `model_weiights: version_v9`
+* `augmentation_version: v2`
+* `criterion_version: v3`
+* `optimizer_version: adam_v4`
+* `optimizer_weights: None`
+* `scheduler_version: rop_v1`
+* [full config](/output/models/detector/v7/config.json)
