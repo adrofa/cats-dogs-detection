@@ -1,0 +1,23 @@
+{
+    "version": "v9",
+    "debug": false,
+    "dataset_dir": "/content/cats_dogs_dataset",
+    "dataset_df_path": "/content/drive/MyDrive/neurus_test_task/cats-dogs-detection/output/dataset_df/dataset_df.pkl",
+    "output_dir": "/content/drive/MyDrive/neurus_test_task/cats-dogs-detection/output/",
+    "crossval_version": "v1",
+    "fold": 0,
+    "augmentation_version": "v2",
+    "batch_size": 32,
+    "n_jobs": 2,
+    "device": "cuda",
+    "model_version": "v6",
+    "model_weights": "/content/drive/MyDrive/neurus_test_task/cats-dogs-detection/output/models/detector/v8/model.pt",
+    "criterion_version": "v3",
+    "optimizer_version": "adam_v5",
+    "optimizer_weights": "/content/drive/MyDrive/neurus_test_task/cats-dogs-detection/output/models/detector/v8/optimizer.pt",
+    "scheduler_version": "rop_v1",
+    "pred_ths": 0,
+    "epoch_num": 1000,
+    "early_stopping": 10,
+    "seed": 0
+}
