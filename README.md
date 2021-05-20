@@ -24,14 +24,13 @@
 Experiments performed with pretrained models are described below.
 
 ### Results
-Final solution: `mIoU 85%, classification accuracy 99%, 8.99ms, 2686 train, 400 valid`
+Final solution [`/output/inference/v1`](/output/inference/v1):
+<br/>`mIoU 85%, classification accuracy 99%, 8.99ms, 2686 train, 400 valid`
 * mean-IoU: 85%
 * accuracy: 99%
 * inference time pepr image: 8.17ms
 * train size: 2686 *(cross_validation_split-v0 fold-0)*
 * valid size: 400
-
-more details: [`/output/inference/v1`](/output/inference/v1)
 
 #### Bounding Box Predictions Example
 ##### TOP3 Best
