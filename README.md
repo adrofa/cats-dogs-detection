@@ -24,7 +24,7 @@
 Experiments performed with pretrained models are described below.
 
 ### Results
-Final solution:
+Final solution: `mIoU 85%, classification accuracy 99%, 8.99ms, 2686 train, 400 valid`
 * mean-IoU: 85%
 * accuracy: 99%
 * inference time pepr image: 8.17ms
