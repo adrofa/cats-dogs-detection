@@ -32,10 +32,10 @@ Final solution [`/output/inference/v1`](/output/inference/v1):
 * train size: 2686 *(cross_validation_split-v0 fold-0)*
 * valid size: 400
 
-#### Bounding Box Predictions Example
-##### TOP3 Best
+#### Bounding Box Predictions Examples
+##### TOP3 Best Predictions
 ![top3_best](/output/inference/v1/top3_best.png)
-##### TOP3 Worst 
+##### TOP3 Worst Predictions
 ![top3_worst](/output/inference/v1/top3_worst.png)
 
 ### Tested Hypothesis
