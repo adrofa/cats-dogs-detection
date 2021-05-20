@@ -313,7 +313,7 @@ if __name__ == "__main__":
         "device": "cuda",
 
         "model_version": "v5",
-        "model_weights": "/media/adrofa/Data/YandexDisk/Documents/Career/DS/test_tasks/2021_05_13_neurus/output/models/detector/v5/model.pt",
+        "model_weights": "../../output/models/detector/v5/model.pt",
 
         "criterion_version": "v3",
 

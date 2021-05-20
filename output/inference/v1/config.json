@@ -1,0 +1,15 @@
+{
+    "version": "v1",
+    "dataset_dir": "../../input/cats_dogs_dataset",
+    "dataset_df_path": "../../output/dataset_df/dataset_df.pkl",
+    "output_dir": "../../output",
+    "model_version": "v6",
+    "model_weights": "../../output/models/detector/v11/model.pt",
+    "train_size": "2686",
+    "train_size_comment": "train length of cross_validation_split-v1 fold-0",
+    "crossval_version": "test",
+    "fold": null,
+    "split": null,
+    "augmentation_version": "v1",
+    "device": "cuda"
+}

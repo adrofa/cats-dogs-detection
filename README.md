@@ -7,18 +7,42 @@
 * `run` - contains scripts for training and inference:
     * `train_clasifier.py` - for training classifier only architectures;
     * `train_detector.py` - for training classifier + detector architectures;
+    * `inference.py` - for generating class and bounding boxes predictions
+      (also, TOP-3 best and worst bounding boxes predictions examples);
     * `versions` - contains versions of models, augmentation, loss functions, optimizers and
       lr-schedulers, which will be called in `train_*.py` scripts. 
 * `scripts` - contains scripts to be rarely called:
     * `cross_validation_split.py` - splits `train` dataset into folds;
     * `dataset_df.py` - collects dataset information (annotation, image sizes etc.)
     * `image_normalization.py` - estimates images mean and std for normalization.
-* `notebooks` - collects created Jupyter Notebooks:
+* `notebooks` - contains created Jupyter Notebooks:
     * `Initial_EDA.ipynb` - checks how train dataset matches valid dataset;
     * `colab` - contains notebooks run in Google Colab with `run/train_*.py` scripts.
-      <u>Notebooks naming is inline with Tested Hypothesis versions described below</u>. 
+      <u>Notebooks naming is inline with Tested Hypothesis versions described below</u>.
 
-# Tested Hypothesis
+## Transfer Learning
+Experiments performed with pretrained models are described below.
+
+### Results
+Final solution:
+* mean-IoU: 85%
+* accuracy: 99%
+* inference time pepr image: 8.17ms
+* train size: 2686 *(cross_validation_split-v0 fold-0)*
+* valid size: 400
+
+more details: [`/output/inference/v1`](/output/inference/v1)
+
+#### Bounding Box Predictions Example
+##### TOP3 Best
+![top3_best](/output/inference/v1/top3_best.png)
+##### TOP3 Worst 
+![top3_worst](/output/inference/v1/top3_worst.png)
+
+### Tested Hypothesis
+While training the model I wasn't "looking" at valid dataset and split the train dataset
+in 2 parts: 90% - train and 10% - valid. 
+
 **Loss function** for training classifier+detector model I used combined loss function:
 * **binary cross-entropy** - for classification;
 * **smooth-L1 x weight** - for bounding boxes (bounding boxes were normalized to range \[0, 1]).
@@ -30,12 +54,10 @@ Also I made couple experiments with the pretrained **Xception**,
 but **EfficientNet-B0** showed better results, hence I continue with this backbone.
 *Both pretrained models are from [`timm`](https://pypi.org/project/timm/) package.*
 
-*For more parameters versions details consider `run/versions/<parameter>_version`.* 
+*For more details regarding run parameters: model, optimizer augmentation, criterion, scheduler
+consider `run/versions/<parameter>`.* 
 
-## Transfer Learning
-Experiments performed with pretrained models are described below. 
-
-### Version 1 | IoU: 0.427
+#### Version 1 | IoU<i>@best_loss</i>: 0.427
 1. Take EfficientNet-B0 model pretrained on imagenet;
 2. Replace final FC layer with a custom one;
 3. Train until early stopping.
@@ -49,7 +71,7 @@ Experiments performed with pretrained models are described below.
 Results:
 ![v1](/output/models/detector/v1/progress.png)
 
-### Version 2 | IoU: 0.425
+#### Version 2 | IoU<i>@best_loss</i>: 0.425
 1. Take model (with the best valid loss) from Version 1;
 2. Unfreeze last 2 CONV layers;
 3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
@@ -69,7 +91,7 @@ Results:
 * I suppose, that classifier-head was to heavy and found its local minimum
 ![v2](/output/models/detector/v2/progress.png)
   
-### Version 3 | IoU: 0.395
+#### Version 3 | IoU<i>@best_loss</i>: 0.395
 1. Take EfficientNet-B0 model pretrained on imagenet;
 2. Replace final FC layer with a custom one (lighter than in version 1);
 3. Train until early stopping.
@@ -84,7 +106,7 @@ Results:
 ![v3](/output/models/detector/v3/progress.png)
 
 
-### Version 4 | IoU: 0.401
+#### Version 4 | IoU<i>@best_loss</i>: 0.401
 1. Take model (with the best valid loss) from Version 3;
 2. Unfreeze last 2 CONV layers;
 3. Increase bbox weights in Loss function 75 -> 100 (model does good classification,
@@ -102,7 +124,7 @@ Results:
 Results:
 ![v4](/output/models/detector/v4/progress.png)
 
-### Version 5 | IoU: 0.714
+#### Version 5 | IoU<i>@best_loss</i>: 0.714
 I performed several local tests on Version 4:
 * with different LRs;
 * w/o separate FC layer pretraining;
@@ -137,7 +159,7 @@ Results:
 ![v5](/output/models/detector/v5/progress.png)
 
 
-### Version 6 | IoU: 0.811
+#### Version 6 | IoU<i>@best_loss</i>: 0.811
 Here I wil:
 1. take Version 5 model;
 2. unfreeze 1 more layer (total: last 3 Conv layers).
@@ -186,7 +208,7 @@ In this version I will try to fix it with LR reduction.
 Results:
 ![v8](/output/models/detector/v8/progress.png)
 
-### Version 9 | 0.847
+#### Version 9 | IoU<i>@best_loss</i>: 0.847
 Version 8 was converging well, but slowly. I believe that Version 7 (with too high LR) failed
 because ADAM-optimizer was started from scratch.
 
@@ -204,7 +226,7 @@ In Version 9 I will use "pretrained" optimizer from Version 8 and increase LR.
 Results:
 ![v9](/output/models/detector/v9/progress.png)
 
-### Version 10 | 0.85
+#### Version 10 | IoU<i>@best_loss</i>: 0.85
 Here I wil:
 1. take Version 9 model;
 2. unfreeze next Conv layer (total: last 5 Conv layers);
@@ -222,11 +244,11 @@ Here I wil:
 Results:
 ![v10](/output/models/detector/v10/progress.png)
 
-### Version 11 | 
+#### Version 11 | IoU<i>@best_loss</i>: 0.847
 Here I wil:
-1. try to fine-tune the model from Version 10 with a higher LR
+1. try to train model from Version 10 with a higher LR;
 2. return old augmentation (w/o padding, just resizing),
-   otherwise I need to produce additional code for inference. 
+   otherwise I need to produce additional code for bounding boxes inference. 
 
 * `model_version: v6`
 * `model_weights: version_v10`
